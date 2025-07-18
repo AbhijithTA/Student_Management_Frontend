@@ -48,7 +48,7 @@ Testing Accounts
 
 Super Admin
 **Email**: ``` admin@example.com ```
-**Password**: ```admin123 ```
+**Password**: ```admin123```
 
 Staff
 **Email**: ```staff1@example.com```
@@ -73,5 +73,5 @@ Technologies Used
 
 **LIVE PREVIEW**
 ``` bash
-link will be here
+https://student-management-frontend-rouge.vercel.app/
 ```
