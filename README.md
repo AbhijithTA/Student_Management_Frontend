@@ -22,7 +22,6 @@ A modern React-based frontend for a Student Management System with role-based ac
 1. **Clone the repository**
    ```bash
    git clone https://github.com/AbhijithTA/Student_Management_Frontend
-   cd student-management-frontend
    ```
 2. **Install dependencies**
    ```bash
