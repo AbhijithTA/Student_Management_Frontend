@@ -27,6 +27,8 @@ const StudentsPage = () => {
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [studentToDelete, setStudentToDelete] = useState(null);
 
+
+//Getting the permissions 
   const canCreate = user?.role === "superadmin" || user?.permissions?.create;
   const canEdit = user?.role === "superadmin" || user?.permissions?.edit;
   const canDelete = user?.role === "superadmin" || user?.permissions?.del;

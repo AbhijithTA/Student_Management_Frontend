@@ -10,7 +10,7 @@ const Sidebar = () => {
   const userName = user?.name ||  "User";
 
   
-  
+  //This is menus and showed based n the user role
   const adminMenu = [
     { name: "Students", path: "/dashboard/students", icon: <FaUserGraduate /> },
     { name: "Staff", path: "/dashboard/staff", icon: <FaUsersCog /> },

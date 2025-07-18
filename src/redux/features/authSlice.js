@@ -1,12 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../api/authApi";
 
+
+//login slice and after login permission is bundled with the user
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await api.login(credentials);
-      console.log("Login response:", response.user);
       
       if (response.user.role === 'admin' ) {
         const adminUser = {

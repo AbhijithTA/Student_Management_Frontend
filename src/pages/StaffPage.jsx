@@ -30,6 +30,7 @@ const StaffPage = () => {
     dispatch(fetchStaff());
   }, [dispatch]);
 
+  //crud function for the staffs and admin
   const handleCreate = () => {
     setCurrentStaff(null);
     setIsFormOpen(true);
