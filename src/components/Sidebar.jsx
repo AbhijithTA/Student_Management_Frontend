@@ -7,12 +7,9 @@ import { selectCurrentUser } from "../redux/features/authSlice";
 const Sidebar = () => {
   const user = useSelector(selectCurrentUser);
   const role = user?.role;
+  const userName = user?.name ||  "User";
 
   
-  const commonMenu = [
-    { name: "Dashboard", path: "/dashboard", icon: <FaHome />, exact: true },
-  ];
-
   
   const adminMenu = [
     { name: "Students", path: "/dashboard/students", icon: <FaUserGraduate /> },
@@ -26,7 +23,6 @@ const Sidebar = () => {
 
  
   const menu = [
-    ...commonMenu,
     ...(role === 'superadmin' ? adminMenu : []),
     ...(role === 'staff' ? staffMenu : []),
   ];
@@ -38,9 +34,16 @@ const Sidebar = () => {
       transition={{ duration: 0.4 }}
       className="w-64 bg-white shadow-md min-h-screen px-4 py-6 fixed"
     >
-      <h1 className="text-2xl font-bold text-blue-700 mb-8 text-center">
-        {role === 'superadmin' ? 'Admin Panel' : 'Staff Panel'}
-      </h1>
+     <div className="mb-6 px-3 py-4 bg-blue-50 rounded-lg">
+        <h2 className="text-lg font-medium text-gray-700">Welcome back,</h2>
+        <h1 className="text-xl font-bold text-blue-700">
+          {userName.split(' ')[0]} 
+        </h1>
+        <p className="text-sm text-gray-500 mt-1">
+          {role === 'superadmin' ? 'Super Admin' : 'Staff'}
+        </p>
+      </div>
+
       <nav className="flex flex-col gap-4">
         {menu.map((item) => (
           <NavLink

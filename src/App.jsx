@@ -1,23 +1,38 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import PrivateRoute from "./components/PrivateRoute";
-import Login from "./pages/Login";
-import DashboardLayout from "./layouts/DashboardLayout";
-import StudentsPage from "./pages/StudentsPage";
-import DashboardHome from "./pages/DashboardHome";
-import StaffPage from "./pages/StaffPage";
+import { lazy, Suspense } from 'react';
+
+const Login = lazy(() => import('./pages/Login'));
+const DashboardLayout = lazy(() => import('./layouts/DashboardLayout'));
+const StudentsPage = lazy(() => import('./pages/StudentsPage'));
+const StaffPage = lazy(() => import('./pages/StaffPage'));
+
+import LoadingSpinner from './components/LoadingSpinner';
+
+import RoleBasedRoute from "./components/RoleBasedRoute";
+import { Navigate } from "react-router-dom";
+
 function App() {
   return (
     <BrowserRouter>
+    <Suspense fallback={<LoadingSpinner />}>
       <Routes>
         <Route path="/" element={<Login />} />
-         <Route path="/dashboard" element={<DashboardLayout />}>
-         <Route index element={<DashboardHome />} />
-          <Route path="students" element={<StudentsPage />} />
-          <Route path="staff" element={<StaffPage />} />
+        <Route
+          element={<RoleBasedRoute allowedRoles={["superadmin", "staff"]} />}
+        >
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route index element={<StudentsPage />} />
+            <Route path="students" element={<StudentsPage />} />
+
+            <Route element={<RoleBasedRoute allowedRoles={["superadmin"]} />}>
+              <Route path="staff" element={<StaffPage />} />
+            </Route>
+          </Route>
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Route>
       </Routes>
+      </Suspense>
     </BrowserRouter>
-    
   );
 }
 
