@@ -14,6 +14,7 @@ import StudentForm from "../components/StudentForm";
 import Modal from "../components/Modal";
 import Table from "../components/Table";
 import Button from "../components/Button";
+import { toast } from "react-hot-toast";
 
 const StudentsPage = () => {
   const dispatch = useDispatch();
@@ -27,13 +28,10 @@ const StudentsPage = () => {
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [studentToDelete, setStudentToDelete] = useState(null);
 
-
-//Getting the permissions 
+  //Getting the permissions
   const canCreate = user?.role === "superadmin" || user?.permissions?.create;
   const canEdit = user?.role === "superadmin" || user?.permissions?.edit;
   const canDelete = user?.role === "superadmin" || user?.permissions?.del;
-
-  
 
   useEffect(() => {
     dispatch(fetchStudents());
@@ -54,17 +52,26 @@ const StudentsPage = () => {
     setIsDeleteConfirmOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
-    dispatch(deleteStudent(studentToDelete._id));
-    setIsDeleteConfirmOpen(false);
-    setStudentToDelete(null);
+  const handleDeleteConfirm = async () => {
+    try {
+      await dispatch(deleteStudent(studentToDelete._id));
+      toast.success("Student deleted successfully!");
+      setIsDeleteConfirmOpen(false);
+      setStudentToDelete(null);
+    } catch (error) {
+      toast.error(error.message || "Failed to delete student");
+    }
   };
 
-  const handleSubmit = (studentData) => {
+  const handleSubmit = async (studentData) => {
     if (currentStudent) {
-      dispatch(updateStudent({ id: currentStudent._id, studentData }));
+      await dispatch(
+        updateStudent({ id: currentStudent._id, studentData })
+      ).unwrap();
+      toast.success("Student updated successfully!");
     } else {
-      dispatch(createStudent(studentData));
+      dispatch(createStudent(studentData)).unwrap();
+      toast.success("Student created successfully!");
     }
     setIsFormOpen(false);
   };

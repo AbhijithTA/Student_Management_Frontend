@@ -10,6 +10,8 @@ import {
   selectStaffError,
 } from "../redux/features/staffSlice";
 
+import { toast } from "react-hot-toast";
+
 import { useEffect, useState } from "react";
 import Modal from "../components/Modal";
 import Table from "../components/Table";
@@ -41,21 +43,43 @@ const StaffPage = () => {
     setIsFormOpen(true);
   };
 
-  const handleDelete = (staff) => {
-    dispatch(deleteStaff(staff._id));
-  };
-
-  const handleSubmit = (data) => {
-    if (currentStaff) {
-      dispatch(updateStaff({ id: currentStaff._id, staffData: data }));
-    } else {
-      dispatch(createStaff(data));
+const handleDelete = async (staff) => {
+    try {
+      await dispatch(deleteStaff(staff._id)).unwrap();
+      toast.success("Staff deleted successfully");
+    } catch (error) {
+      toast.error(error.message || "Failed to delete staff");
     }
-    setIsFormOpen(false);
   };
 
-  const handleAssignPermissions = (id, perms) => {
-    dispatch(assignPermissions({ staffId: id, permissions: perms }));
+const handleSubmit = async (data) => {
+    try {
+      if (currentStaff) {
+        await dispatch(updateStaff({ 
+          id: currentStaff._id, 
+          staffData: data 
+        })).unwrap();
+        toast.success("Staff updated successfully");
+      } else {
+        await dispatch(createStaff(data)).unwrap();
+        toast.success("Staff created successfully");
+      }
+      setIsFormOpen(false);
+    } catch (error) {
+      toast.error(error.message || "Operation failed");
+    }
+  };
+
+  const handleAssignPermissions = async (id, perms) => {
+    try {
+      await dispatch(assignPermissions({ 
+        staffId: id, 
+        permissions: perms 
+      })).unwrap();
+      toast.success("Permissions updated successfully");
+    } catch (error) {
+      toast.error(error.message || "Failed to update permissions");
+    }
   };
 
   const columns = [
