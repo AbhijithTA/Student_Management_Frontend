@@ -15,6 +15,7 @@ import Modal from "../components/Modal";
 import Table from "../components/Table";
 import Button from "../components/Button";
 import { toast } from "react-hot-toast";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const StudentsPage = () => {
   const dispatch = useDispatch();
@@ -117,14 +118,17 @@ const StudentsPage = () => {
         {canCreate && <Button onClick={handleCreate}>Add New Student</Button>}
       </div>
 
-      {status === "loading" && <div>Loading...</div>}
-      {error && <div className="text-red-500">{error}</div>}
-
-      <Table
-        data={students}
-        columns={columns}
-        emptyMessage="No students found"
-      />
+      {status === "loading" ? (
+        <LoadingSpinner size="md" color="primary" />
+      ) : error ? (
+        <div className="text-red-500">{error}</div>
+      ) : (
+        <Table
+          data={students}
+          columns={columns}
+          emptyMessage="No students found"
+        />
+      )}
 
       <Modal
         isOpen={isFormOpen}

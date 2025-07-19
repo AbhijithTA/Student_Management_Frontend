@@ -18,6 +18,7 @@ import Table from "../components/Table";
 import Button from "../components/Button";
 import StaffForm from "../components/StaffForm";
 import StaffPermissions from "../components/StaffPermissions";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const StaffPage = () => {
   const dispatch = useDispatch();
@@ -43,7 +44,7 @@ const StaffPage = () => {
     setIsFormOpen(true);
   };
 
-const handleDelete = async (staff) => {
+  const handleDelete = async (staff) => {
     try {
       await dispatch(deleteStaff(staff._id)).unwrap();
       toast.success("Staff deleted successfully");
@@ -52,13 +53,15 @@ const handleDelete = async (staff) => {
     }
   };
 
-const handleSubmit = async (data) => {
+  const handleSubmit = async (data) => {
     try {
       if (currentStaff) {
-        await dispatch(updateStaff({ 
-          id: currentStaff._id, 
-          staffData: data 
-        })).unwrap();
+        await dispatch(
+          updateStaff({
+            id: currentStaff._id,
+            staffData: data,
+          })
+        ).unwrap();
         toast.success("Staff updated successfully");
       } else {
         await dispatch(createStaff(data)).unwrap();
@@ -72,10 +75,12 @@ const handleSubmit = async (data) => {
 
   const handleAssignPermissions = async (id, perms) => {
     try {
-      await dispatch(assignPermissions({ 
-        staffId: id, 
-        permissions: perms 
-      })).unwrap();
+      await dispatch(
+        assignPermissions({
+          staffId: id,
+          permissions: perms,
+        })
+      ).unwrap();
       toast.success("Permissions updated successfully");
     } catch (error) {
       toast.error(error.message || "Failed to update permissions");
@@ -91,7 +96,7 @@ const handleSubmit = async (data) => {
       Cell: ({ value, row }) => (
         <StaffPermissions
           staffId={value}
-          defaultPermissions={row.original.permissions} 
+          defaultPermissions={row.original.permissions}
           onAssign={handleAssignPermissions}
         />
       ),
@@ -128,10 +133,17 @@ const handleSubmit = async (data) => {
         <Button onClick={handleCreate}>Add New Staff</Button>
       </div>
 
-      {status === "loading" && <div>Loading...</div>}
-      {error && <div className="text-red-500">{error}</div>}
-
-      <Table data={staffList} columns={columns} emptyMessage="No staff found" />
+      {status === "loading" ? (
+        <LoadingSpinner size="md" color="primary" />
+      ) : error ? (
+        <div className="text-red-500">{error}</div>
+      ) : (
+        <Table
+          data={staffList}
+          columns={columns}
+          emptyMessage="No staff found"
+        />
+      )}
 
       <Modal
         isOpen={isFormOpen}
